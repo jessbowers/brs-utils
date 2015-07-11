@@ -4,6 +4,17 @@
 ' @singleton
 ' @returns {Object} the buDeviceUtils singleton
 ' @license MIT
+' @functions
+' * getAppVersion
+' * getResolution
+' * getFirmwareVersion
+' * getCurrentLanguage
+' * writeEntry
+' * readEntry
+' * listEntries
+' * listSections
+' * deleteEntry
+' * deleteAllEntries
 function buDeviceUtils() as Object
     if(m.buDeviceUtils = Invalid) then
         m.buDeviceUtils = {

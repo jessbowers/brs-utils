@@ -3,6 +3,12 @@
 ' @singleton
 ' @returns {Object} the buRandomUtils singleton
 ' @license MIT
+' @functions
+' * nextInteger
+' * nextFloat
+' * nextString
+' * nextHexString
+' * uuid
 function buRandomUtils() as Object
     if(m.buRandomUtils = Invalid) then
         m.buRandomUtils = {
