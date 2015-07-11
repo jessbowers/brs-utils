@@ -50,6 +50,7 @@ This includes:
 * toSHA512Hash
 * substitute
 * toString
+* isNumeric
 
 ## buNumbersUtils
 
@@ -58,6 +59,14 @@ This includes:
 * floor
 * ceiling
 * round
+* isOdd
+* isEven
+* bin2dec
+* hex2dec
+* rad2deg
+* deg2rad
+* factorial
+* average
 
 ## buArrayUtils
 
@@ -106,6 +115,13 @@ This includes:
 * substractDays
 * substractHours
 * toString
+
+## buValidationUtils
+
+* isEmail
+* isURL
+* isCreditCard
+* lunhCheck
 
 ## buI18N
 Retrieve translation keys from translation files. Usage:
