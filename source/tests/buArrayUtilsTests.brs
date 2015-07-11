@@ -19,6 +19,7 @@ function buArrayUtilsTests() as Object
 
         testContains: function() as Void
             buTest().assertTrue(buArrayUtils().contains([1,2,3], 2))
+            buTest().assertTrue(buArrayUtils().contains(["1","2","3"], "2"))
             buTest().assertFalse(buArrayUtils().contains([1,2,3], 4))
         end function,
 
