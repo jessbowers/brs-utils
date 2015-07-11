@@ -50,43 +50,32 @@ function buDateTimeUtils() as Object
             end function,
 
             dateOf: function(year as Integer, month as Integer, day as Integer, hour = 0 as Integer, minutes = 0 as Integer) as Object
-                hourStr = hour.toStr()
-                if hour < 10 then
-                    hourStr = "0" + hourStr
-                end if
+                dstr = "{0}-{1}-{2}"
+                k = buStringUtils().intToString(month, true)
+                d = buStringUtils().intToString(day, true)
+                dstr = buStringUtils().substitute(dstr, year, k, d)
 
-                minuteStr = minutes.toStr()
-                if minutes < 10 then
-                    minuteStr = "0" + minuteStr
-                end if
+                h = buStringUtils().intToString(hour, true)
+                k = buStringUtils().intToString(minutes, true)
+
+                tstr = "{0}:{1}:00"
+                tstr = buStringUtils().substitute(tstr, h, k, s)
 
                 _date = createObject("roDateTime")
-                _date.fromISO8601String(year.toStr() + "-" + month.toStr() + "-" + day.toStr() + " " + hourStr + ":" + minuteStr + ":00")
+                _date.fromISO8601String(dstr + " " + tstr)
                 return _date
             end function,
 
-            ' Parse this 2016/11/03 to a roDateTime or this
-            ' @param {String} d - String like 2016/11/03
-            ' @param {String} t - Optional string like 01:02
-            ' @returns {roDateTime}
-            parse: function(d as String, t = "00:00" as String) as Object
-                if d = Invalid then
-                    return Invalid
+            ' Parse a String to a roDateTime using a formatter
+            ' @param {String} date - String like 2016/11/03 22:30 (depends on formatter)
+            ' @param {Object} [formatter = buISODateTimeFormatter] - formatter to use for parsing
+            ' @returns {buOptional} the date parsed
+            parse: function(date as String, formatter = buISODateTimeFormatter() as Object) as Object
+                if buStringUtils().isEmpty(date) then
+                    return buOptional().error("date can't be empty")
                 end if
 
-                ' Tokenize from YYYY/MM/DD
-                dateTokens = d.tokenize("/")
-
-                if dateTokens.count() <> 3 then
-                    return Invalid
-                end if
-
-                ' Now, roDateTime only likes ISO format
-                ' YYYY-MM-DD HH:MM:SS
-                date = createObject("roDateTime")
-                date.fromISO8601String(dateTokens[0] + "-" + dateTokens[1] + "-" + dateTokens[2] + " " + t)
-
-                return date
+                return buOptional(formatter.parse(date))
             end function,
 
             toMidnight: function(date as Object) as Object
@@ -163,8 +152,82 @@ function buDateTimeUtils() as Object
                 newDate = createObject("roDateTime")
                 newDate.fromSeconds(date.asSeconds() - seconds)
                 return newDate
-            end function
+            end function,
+
+            ' Converts a roDateTime to a string using a formatter
+            ' @param {Object} date - the roDateTime to convert
+            ' @param {Object} [formatter = buISODateTimeFormatter] - formatter to use for generating the string
+            ' @returns {String} the string in the formatter way
+            toString: function(date as Object, formatter = buISODateTimeFormatter() as Object) as String
+                if not buTypeUtils().isDateTime(date) then
+                    return ""
+                end if
+
+                return formatter.toString(date)
+            end function,
         }
     endif
     return m.buDateTimeUtils
+end function
+
+' roDateTime formatter used by buDateTimeUtils().parse() and buDateTimeUtils().toString() for ISO 8601 date times
+' @returns {Object} the date formatter
+function buISODateTimeFormatter() as Object
+    return {
+        parse: function(s as String) as Dynamic
+            date = createObject("roDateTime")
+            date.fromISO8601String(s)
+            return date
+        end function,
+
+        toString: function(date as Object) as String
+            return date.toISOString()
+        end function,
+    }
+end function
+
+' Generic roDateTime formatter used by buDateTimeUtils().parse() and buDateTimeUtils().toString() for
+' dates like YYYY{ds}MM{ds}DD{dts}HH:MM:SS
+' @param {String} [ds = "/"] - the date separator
+' @param {String} [dts = " "] - the date time separator
+' @returns {Object} the date formatter
+function buGenericDateTimeFormatter(ds = "/" as String, dts = " " as String) as Object
+    return {
+        dateSeparator: ds,
+        dateTimeSeparator: dts,
+
+        parse: function(str as String) as Object
+            arr1 = str.tokenize(m.dateTimeSeparator)
+
+            if arr1.count() <> 2 then
+                return Invalid
+            end if
+
+            dateTokens = arr1[0].tokenize(m.dateSeparator)
+
+            if dateTokens.count() <> 3 then
+                return Invalid
+            end if
+
+            ' Now, roDateTime only likes ISO format YYYY-MM-DD HH:MM:SS
+            res = createObject("roDateTime")
+            res.fromISO8601String(dateTokens[0] + "-" + dateTokens[1] + "-" + dateTokens[2] + " " + arr1[1])
+            return res
+        end function,
+
+        toString: function(date as Object) as String
+            dstr = "{0}" + m.dateSeparator + "{1}" + m.dateSeparator + "{2}"
+            k = buStringUtils().intToString(date.getMonth(), true)
+            d = buStringUtils().intToString(date.getMonth(), true)
+            dstr = buStringUtils().substitute(dstr, date.getYear(), k, d)
+
+            h = buStringUtils().intToString(date.getHours(), true)
+            k = buStringUtils().intToString(date.getMinutes(), true)
+            s = buStringUtils().intToString(date.getSeconds(), true)
+
+            tstr = "{0}:{1}:{2}"
+            tstr = buStringUtils().substitute(tstr, h, k, s)
+            return dstr + m.dateTimeSeparator + tstr
+        end function,
+    }
 end function

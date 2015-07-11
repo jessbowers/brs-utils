@@ -9,7 +9,7 @@ function buStringUtils() as Object
         m.buStringUtils = {
             '
             ' Checks if a string is empty:
-            ' @param {String} The string to check
+            ' @param {String} text - The string to check
             ' @returns {Boolean} true if the string is "" or " "
             '
             isEmpty: function(text as String) as Boolean
@@ -17,22 +17,76 @@ function buStringUtils() as Object
             end function,
 
             ' Convert int to string. This is necessary because the builtin Stri(x) prepends whitespace
-            ' @param {Integer} the integer to convert
+            ' @param {Integer} i - the integer to convert
+            ' @param {Boolean} [prependZero = false] - Indicates to add 0 to values less than 10
             ' @returns {String} the string value of the integer
-            intToString: function(i As Integer) As String
+            intToString: function(i As Integer, prependZero = false as Boolean) As String
                 s = Stri(i)
-                return s.trim()
+                s = s.trim()
+
+                if(prependZero and i >= 0 and i < 10) then
+                    s = "0" + s
+                end if
+
+                return s
             end function,
 
+            ' Convert double to string. This is necessary because the builtin Stri(x) prepends whitespace
+            ' @param {Double} x - the Double to convert
+            ' @returns {String} the string value of the Double
             doubleToString: function(x# as Double) as String
                s = Str(x#)
                return s.trim()
-            end function
+            end function,
 
+            ' Convert Float to string. This is necessary because the builtin Stri(x) prepends whitespace
+            ' @param {Float} x - the Float to convert
+            ' @returns {String} the string value of the Float
             floatToString: function(x! as Float) as String
                s = Str(x!)
                return s.trim()
-            end function
+            end function,
+
+            arrayToString: function(arr as Object) as String
+                if not buTypeUtils().isArray(arr) then
+                    return m.toString(arr)
+                end if
+
+                res = []
+                for each el in arr
+                    if buTypeUtils().isArray(el) then
+                        res.push(m.arrayToString(el))
+                    else
+                        res.push(m.toString(el))
+                    end if
+                end for
+
+                return "[" + m.join(res, ",") + "]"
+            end function,
+
+            objectToString: function(obj as Object) as String
+                if not buTypeUtils().isObject(obj) then
+                    return m.toString(obj)
+                end if
+
+                res = []
+
+                for each k in obj
+                    el = obj[k]
+
+                    str = k + ":"
+                    if buTypeUtils().isObject(el) then
+                        str = str + m.objectToString(el)
+                    else if buTypeUtils().isArray(el) then
+                        str = str + m.arrayToString(el)
+                    else
+                        str = str + m.toString(el)
+                    end if
+
+                    res.push(str)
+                end for
+                return "{" + m.join(res, ",") + "}"
+            end function,
 
             ' Converts anything to a string
             ' @param {Dynamic} the value to convert to a string.
@@ -211,10 +265,21 @@ function buStringUtils() as Object
                 return digest.process(ba)
             end function,
 
+            ' Like the native substitute but accepts any value and not only strings
+            ' @param {String} str - the string with the format.
+            ' @param {Dynamic} a - the first value to susbtitute.
+            ' @param {Dynamic} b - the second value to susbtitute.
+            ' @param {Dynamic} c - the third value to susbtitute.
+            ' @returns {String} the converted string
+            substitute: function(str as String, a = Invalid as Dynamic, b = Invalid as Dynamic, c = Invalid as Dynamic) as String
+                return substitute(str, m.toString(a), m.toString(b), m.toString(c))
+            end function,
+
             ' Converts anything to a string, even an Invalid value.
             ' @param {Dynamic} the value to convert to a string.
             ' @returns {String} the converted string or the type if we can't convert
             toString: function(any As Dynamic) As String
+                if buTypeUtils().isUnitialized(any) return "Uninitilized"
                 if any = Invalid return "Invalid"
                 if buTypeUtils().isString(any) return any
                 if buTypeUtils().isInt(any) return m.intToString(any)
@@ -224,11 +289,9 @@ function buStringUtils() as Object
                 endif
                 if buTypeUtils().isFloat(any) then return m.floatToString(any)
                 if buTypeUtils().isDouble(any) then return m.doubleToString(any)
-
-                if(buTypeUtils().isArray(any)) then
-                    return "[" + m.join(any, ",") + "]"
-                end if
-
+                if buTypeUtils().isArray(any) then return m.arrayToString(any)
+                if buTypeUtils().isObject(any) then return m.objectToString(any)
+                if buTypeUtils().isDateTime(any) then return any.toISOString()
                 return type(any)
             end function
         }

@@ -1,18 +1,31 @@
 function buDateTimeUtilsTests() as Object
     tests = {
         testParse: function() as Void
-            buTest().assertNotInvalid(buDateTimeUtils().parse("2014/10/29", "00:30"), "Failed to parse correct date & time")
-            buTest().assertNotInvalid(buDateTimeUtils().parse("2014/10/29"), "Failed to parse correct date")
-            buTest().assertInvalid(buDateTimeUtils().parse("2014"))
-            buTest().assertInvalid(buDateTimeUtils().parse(""))
+            buTest().assertTrue(buDateTimeUtils().parse("2015-07-10T22:07:24Z").isPresent())
+            buTest().assertFalse(buDateTimeUtils().parse("").isPresent())
+
+            formatter = buGenericDateTimeFormatter("-", "T")
+            buTest().assertTrue(buDateTimeUtils().parse("2015-07-10T22:07:24Z", formatter).isPresent())
+
+            formatter = buGenericDateTimeFormatter()
+            buTest().assertTrue(buDateTimeUtils().parse("2015/07/10 22:07:24Z", formatter).isPresent())
+            buTest().assertTrue(buDateTimeUtils().parse("2015/07/10 22:07:24", formatter).isPresent())
         end function,
 
         testDateOf: function() as Void
-            aDate = buDateTimeUtils().parse("2014/10/29", "00:30")
-            buTest().assertEquals(buDateTimeUtils().compare(aDate, buDateTimeUtils().dateOf(2014, 10, 29, 0, 30)), 0)
-            aDate = buDateTimeUtils().parse("2014/10/29", "00:00")
-            buTest().assertEquals(buDateTimeUtils().compare(aDate, buDateTimeUtils().dateOf(2014, 10, 29, 0)), 0)
-            buTest().assertEquals(buDateTimeUtils().compare(aDate, buDateTimeUtils().dateOf(2014, 10, 29)), 0)
+            d = buDateTimeUtils().dateOf(2014, 10, 29, 0, 30)
+            buTest().assertEquals(d.getYear(), 2014)
+            buTest().assertEquals(d.getMonth(), 10)
+            buTest().assertEquals(d.getDayOfMonth(), 29)
+            buTest().assertEquals(d.getHours(), 0)
+            buTest().assertEquals(d.getMinutes(), 30)
+
+            d = buDateTimeUtils().dateOf(2014, 10, 29)
+            buTest().assertEquals(d.getYear(), 2014)
+            buTest().assertEquals(d.getMonth(), 10)
+            buTest().assertEquals(d.getDayOfMonth(), 29)
+            buTest().assertEquals(d.getHours(), 0)
+            buTest().assertEquals(d.getMinutes(), 0)
         end function,
 
         testCompare: function() as Void
@@ -119,11 +132,23 @@ function buDateTimeUtilsTests() as Object
             buTest().assertEquals(buDateTimeUtils().compare(buDateTimeUtils().substractDays(d1, 2), d3), 0)
         end function,
 
+        testToString: function() as Void
+            d1 = buDateTimeUtils().dateOf(2014, 10, 29, 10, 30)
+            buTest().assertEquals(buDateTimeUtils().toString(d1), "2014-10-29T10:30:00Z")
+
+            formatter = buGenericDateTimeFormatter("-", "T")
+            buTest().assertEquals(buDateTimeUtils().toString(d1, formatter), "2014-10-10T10:30:00")
+
+            formatter = buGenericDateTimeFormatter()
+            buTest().assertEquals(buDateTimeUtils().toString(d1, formatter), "2014/10/10 10:30:00")
+        end function,
+
         addSuite: function() as Void
             suite = {
                 name: "buDateTimeUtilsTests",
                 tests: [
                     { name: "testParse", test: m.testParse },
+                    { name: "testDateOf", test: m.testDateOf },
                     { name: "testCompare", test: m.testCompare },
                     { name: "testIsBetween", test: m.testIsBetween },
                     { name: "testIsBefore", test: m.testIsBefore },
@@ -134,6 +159,7 @@ function buDateTimeUtilsTests() as Object
                     { name: "testAddDays", test: m.testAddDays },
                     { name: "testSubstractHours", test: m.testSubstractHours },
                     { name: "testSubstractDays", test: m.testSubstractDays },
+                    { name: "testToString", test: m.testToString }
                 ]
             }
 

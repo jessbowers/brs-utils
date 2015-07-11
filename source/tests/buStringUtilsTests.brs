@@ -9,6 +9,12 @@ function buStringUtilsTests() as Object
 
         testIntToString: function() as Void
             buTest().assertEquals(buStringUtils().intToString(1), "1")
+            buTest().assertEquals(buStringUtils().intToString(-1), "-1")
+            buTest().assertEquals(buStringUtils().intToString(-1, true), "-1")
+            buTest().assertEquals(buStringUtils().intToString(0, true), "00")
+            buTest().assertEquals(buStringUtils().intToString(1, true), "01")
+            buTest().assertEquals(buStringUtils().intToString(9, true), "09")
+            buTest().assertEquals(buStringUtils().intToString(10, true), "10")
         end function,
 
         testDoubleToString: function() as Void
@@ -22,8 +28,29 @@ function buStringUtilsTests() as Object
             buTest().assertEquals(buStringUtils().toString(1.2!), "1.2")
             buTest().assertEquals(buStringUtils().toString(true), "true")
             buTest().assertEquals(buStringUtils().toString(Invalid), "Invalid")
-            buTest().assertEquals(buStringUtils().toString({}), "roAssociativeArray")
+            buTest().assertEquals(buStringUtils().toString({}), "{}")
+            buTest().assertEquals(buStringUtils().toString([]), "[]")
+            buTest().assertEquals(buStringUtils().toString(["1","2","3"]), "[1,2,3]")
             buTest().assertEquals(buStringUtils().toString([1,2,3]), "[1,2,3]")
+            buTest().assertEquals(buStringUtils().toString([1,2,3, [4,5,6]]), "[1,2,3,[4,5,6]]")
+
+            complex = {
+                a: 1,
+                b: "test",
+                c: [1,2,3],
+                d: [
+                    {x: 1, y: 2},
+                    {x: 2, y: 3},
+                    {x: 3, y: 4},
+                ],
+                e: createObject("roTimespan"),
+                f: function() as Void
+
+                end function
+            }
+
+            ' This may faile because a AA is not sorted
+            buTest().assertEquals(buStringUtils().toString(complex), "{e:roTimespan,a:1,d:[{x:1,y:2},{x:2,y:3},{x:3,y:4}],c:[1,2,3],b:test,f:roFunction}")
         end function,
 
         testEquals: function() as Void
@@ -124,6 +151,21 @@ function buStringUtilsTests() as Object
             buTest().assertFalse(a = c)
         end function,
 
+        testSubstitute: function() as Void
+            buStringUtils().substitute("")
+
+            buTest().assertEquals(buStringUtils().substitute(""), "")
+
+            buTest().assertEquals(buStringUtils().substitute("Lorem"), "Lorem")
+            buTest().assertEquals(buStringUtils().substitute("Lorem {0}", 1), "Lorem 1")
+            buTest().assertEquals(buStringUtils().substitute("Lorem {0}, {1}", 1, 2), "Lorem 1, 2")
+            buTest().assertEquals(buStringUtils().substitute("Lorem {0}, {1}, {2}", 1, 2, 3), "Lorem 1, 2, 3")
+
+            buTest().assertEquals(buStringUtils().substitute("Lorem {0}"), "Lorem Invalid")
+            buTest().assertEquals(buStringUtils().substitute("Lorem {0}, {1}", 1), "Lorem 1, Invalid")
+            buTest().assertEquals(buStringUtils().substitute("Lorem {0}, {1}, {2}", 1, 2), "Lorem 1, 2, Invalid")
+        end function,
+
         addSuite: function() as Void
             suite = {
                 name: "buStringUtilsTests",
@@ -146,7 +188,8 @@ function buStringUtilsTests() as Object
                     { name: "testToMD5Hash", test: m.testToMD5Hash },
                     { name: "testToMD5Hash", test: m.testToSHA1Hash },
                     { name: "testToMD5Hash", test: m.testToSHA256Hash },
-                    { name: "testToMD5Hash", test: m.testToSHA512Hash }
+                    { name: "testToMD5Hash", test: m.testToSHA512Hash },
+                    { name: "testSubstitute", test: m.testSubstitute }
                 ]
             }
 
