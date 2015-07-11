@@ -64,10 +64,12 @@ function buTest() as Object
             end function,
 
             runAllTests: function() as Boolean
+                m.logger.start("All Tests")
                 for each test in m.testCases
                     m.logger.test("Running {0}.{1}", test.suite, test.name)
                     test.func()
                 end for
+                m.logger.stop()
 
                 if(m.fails <> 0) then
                     m.logger.error("Failed {0} tests", m.fails)
