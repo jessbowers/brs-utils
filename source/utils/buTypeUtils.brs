@@ -84,6 +84,10 @@ function buTypeUtils() as Object
                 if obj = Invalid return false
                 if getInterface(obj, "ifAssociativeArray") = Invalid return false
                 return true
+            end function,
+
+            isUnitialized: function(val as Dynamic) as Boolean
+                return type(val) = "<uninitialized>"
             end function
         }
     endif
