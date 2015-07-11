@@ -45,7 +45,7 @@ function buLogger(root as String) as Object
         ' @param {String} arg1 - the {1} value to replace
         ' @param {String} arg2 - the {2} value to replace
         doLog: function(str as String, level as String, arg0 as Dynamic, arg1 as Dynamic, arg2 as Dynamic) as Void
-            msg = substitute(str, buStringUtils().toStr(arg0), buStringUtils().toStr(arg1), buStringUtils().toStr(arg2))
+            msg = buStringUtils().substitute(str, arg0, arg1, arg2)
             print substitute(m.format, m.getTimestamp(), level, m.root, msg)
         end function
 
@@ -108,17 +108,13 @@ function buLogger(root as String) as Object
             return dur
         end function
 
-        ' Get the timestamp fot the logger
+        ' Get the timestamp for the logger
         ' @private
         ' @returns {String} the timestamp
         getTimestamp: function() as String
             m.date.mark()
-            timeStamp = m.date.asDateString("short-date-dashes")
-            timeStamp = timeStamp + " " + m.date.getHours().toStr()
-            timeStamp = timeStamp + ":" + m.date.getMinutes().toStr()
-            timeStamp = timeStamp + ":" + m.date.getSeconds().toStr()
-            timeStamp = timeStamp + "." + m.date.getMilliseconds().toStr()
-            return timeStamp
+            formatter = buGenericDateTimeFormatter("-")
+            return buDateTimeUtils().toString(m.date, formatter)
         end function
     }
 
