@@ -166,6 +166,12 @@ function buStringUtilsTests() as Object
             buTest().assertEquals(buStringUtils().substitute("Lorem {0}, {1}, {2}", 1, 2), "Lorem 1, 2, Invalid")
         end function,
 
+        testIsNumeric: function() as Void
+            buTest().assertFalse(buStringUtils().isNumeric(""))
+            buTest().assertFalse(buStringUtils().isNumeric("4417q23456w89113"), "4417q23456w89113 is not numeric")
+            buTest().assertTrue(buStringUtils().isNumeric("4417123456789113"))
+        end function,
+
         addSuite: function() as Void
             suite = {
                 name: "buStringUtilsTests",
@@ -190,6 +196,7 @@ function buStringUtilsTests() as Object
                     { name: "testToMD5Hash", test: m.testToSHA256Hash },
                     { name: "testToMD5Hash", test: m.testToSHA512Hash },
                     { name: "testSubstitute", test: m.testSubstitute }
+                    { name: "testIsNumeric", test: m.testIsNumeric }
                 ]
             }
 
