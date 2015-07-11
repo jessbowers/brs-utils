@@ -4,6 +4,32 @@
 ' @singleton
 ' @returns {Object} the buStringUtils singleton
 ' @license MIT
+' @functions
+' * isEmpty
+' * intToString
+' * doubleToString
+' * floatToString
+' * arrayToString
+' * objectToString
+' * toStr
+' * equals
+' * truncate
+' * capitalize
+' * split
+' * contains
+' * indexOf
+' * lastIndexOf
+' * join
+' * toArray
+' * reverse
+' * replace
+' * toMD5Hash
+' * toSHA1Hash
+' * toSHA256Hash
+' * toSHA512Hash
+' * substitute
+' * toString
+' * isNumeric
 function buStringUtils() as Object
     if(m.buStringUtils = Invalid) then
         m.buStringUtils = {
@@ -278,7 +304,7 @@ function buStringUtils() as Object
             ' Converts anything to a string, even an Invalid value.
             ' @param {Dynamic} the value to convert to a string.
             ' @returns {String} the converted string or the type if we can't convert
-            toString: function(any As Dynamic) As String
+            toString: function(any as Dynamic) as String
                 if buTypeUtils().isUnitialized(any) return "Uninitilized"
                 if any = Invalid return "Invalid"
                 if buTypeUtils().isString(any) return any
@@ -293,6 +319,13 @@ function buStringUtils() as Object
                 if buTypeUtils().isObject(any) then return m.objectToString(any)
                 if buTypeUtils().isDateTime(any) then return any.toISOString()
                 return type(any)
+            end function,
+
+            isNumeric: function(text as String) as Boolean
+                if m.isEmpty(text) then return false
+
+                roRegex = createObject("roRegex", "^[0-9]*$", "")
+                return roRegex.isMatch(text)
             end function
         }
     endif
