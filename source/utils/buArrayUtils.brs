@@ -3,6 +3,15 @@
 ' @singleton
 ' @returns {Object} the buArrayUtils singleton
 ' @license MIT
+' @functions
+' * equals
+' * isEmpty
+' * contains
+' * indexOf
+' * add
+' * replace
+' * subArray
+' * toString
 function buArrayUtils() as Object
     if(m.buArrayUtils = Invalid) then
         m.buArrayUtils = {
