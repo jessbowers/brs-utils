@@ -21,6 +21,8 @@ This includes:
 * isComparable
 * isNumber
 * isDateTime
+* isObject
+* isUnitialized
 
 ## buStringUtils
 
@@ -28,6 +30,8 @@ This includes:
 * intToString
 * doubleToString
 * floatToString
+* arrayToString
+* objectToString
 * toStr
 * equals
 * truncate
@@ -44,6 +48,7 @@ This includes:
 * toSHA1Hash
 * toSHA256Hash
 * toSHA512Hash
+* substitute
 * toString
 
 ## buNumbersUtils
@@ -100,6 +105,7 @@ This includes:
 * addHours
 * substractDays
 * substractHours
+* toString
 
 ## buI18N
 Retrieve translation keys from translation files. Usage:
@@ -128,3 +134,7 @@ A very simplistic Set implementation. Only works with BrightScript primitives
 
 ## buCache
 A Cache singleton for String data (i.e. JSON or XML data) in the Roku `tmp:` storage
+
+---
+
+Also checkout my [Atom plugin for BrightScript](https://github.com/Eldelshell/language-brs)
