@@ -4,6 +4,20 @@
 ' @singleton
 ' @returns {Object} the buTypeUtils singleton
 ' @license MIT
+' @functions
+' * isString
+' * isBool (isBoolean)
+' * isInt (isInteger)
+' * isArray
+' * isList
+' * isFloat
+' * isDouble
+' * isComparable
+' * isNumber
+' * isDateTime
+' * isObject
+' * isUnitialized
+' * isType
 function buTypeUtils() as Object
     if(m.buTypeUtils = Invalid) then
         m.buTypeUtils = {
@@ -25,6 +39,10 @@ function buTypeUtils() as Object
 
             isDouble: function(obj as Dynamic) as Boolean : return m.isType(obj, "ifDouble") : end function,
 
+            isDateTime: function(obj as Dynamic) as Boolean : return m.isType(obj, "ifDateTime") : end function,
+
+            isObject: function(obj as Dynamic) as Boolean : return m.isType(obj, "ifAssociativeArray") : end function,
+
             isComparable: function(obj as Dynamic) as Boolean
                 if (obj = Invalid) then return true
                 if (m.isString(obj)) then return true
@@ -42,13 +60,9 @@ function buTypeUtils() as Object
                 return false
             end function,
 
-            isDateTime: function(obj as Dynamic) as Boolean : return m.isType(obj, "ifDateTime") : end function,
-
-            isObject: function(obj as Dynamic) as Boolean : return m.isType(obj, "ifAssociativeArray") : end function,
-
             isType: function (obj as Dynamic, ifType as String) as Boolean
                 if obj = Invalid return false
-                if GetInterface(obj, ifType) = Invalid return false
+                if getInterface(obj, ifType) = Invalid return false
                 return true
             end function,
 
