@@ -14,6 +14,10 @@
 ' @license MIT
 function buOptional(value = Invalid as Dynamic) as Object
 
+    if buTypeUtils().isUnitialized(value) then
+        value = Invalid
+    end if
+
     optional = {
 
         _value: value,
