@@ -3,6 +3,20 @@
 ' @singleton
 ' @returns {Object} the buArrayUtils singleton
 ' @license MIT
+' @functions
+' * compare
+' * isBetween
+' * isAfter
+' * isBefore
+' * dateOf
+' * parse
+' * toMidnight
+' * duration
+' * addDays
+' * addHours
+' * substractDays
+' * substractHours
+' * toString
 function buDateTimeUtils() as Object
     if(m.buDateTimeUtils = Invalid) then
         m.buDateTimeUtils = {
@@ -33,7 +47,7 @@ function buDateTimeUtils() as Object
                 return m.compare(between, startDateTime) > 0 and m.compare(between, endDateTime) < 0
             end function,
 
-            ' Compares two dates to know if before is before current
+            ' Compares two dates to know if is before current
             ' @param {Object} current - when the range starts
             ' @param {Object} before - the roDateTime we want to check
             ' @return {Boolean} true if the roDateTime between is before
@@ -41,7 +55,7 @@ function buDateTimeUtils() as Object
                 return m.compare(current, before) < 0
             end function,
 
-            ' Compares two dates to know if after is before current
+            ' Compares two dates to know if is after current
             ' @param {Object} current - when the range starts
             ' @param {Object} after - the roDateTime we want to check
             ' @returns {Boolean} true if the roDateTime between is after
@@ -49,6 +63,13 @@ function buDateTimeUtils() as Object
                 return m.compare(current, after) > 0
             end function,
 
+            ' Creates a roDateTime object from a given set of integers
+            ' @param {Integer} year - the year
+            ' @param {Integer} month - the month
+            ' @param {Integer} day - the day of month
+            ' @param {Integer} [hour = 0] - the hour
+            ' @param {Integer} [minutes = 0] - the minutes
+            ' @returns {roDateTime} of the given values
             dateOf: function(year as Integer, month as Integer, day as Integer, hour = 0 as Integer, minutes = 0 as Integer) as Object
                 dstr = "{0}-{1}-{2}"
                 k = buStringUtils().intToString(month, true)
@@ -78,6 +99,9 @@ function buDateTimeUtils() as Object
                 return buOptional(formatter.parse(date))
             end function,
 
+            ' For a given roDateTime transform it to YYYYMMDD 23:59:0000
+            ' @param {roDateTime} date - date to convert
+            ' @returns {roDateTime} date with the time set to 23:59:0000
             toMidnight: function(date as Object) as Object
                 y = date.getYear()
                 m = date.getMonth()
