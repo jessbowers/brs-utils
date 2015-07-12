@@ -91,6 +91,14 @@ function buArrayUtilsTests() as Object
             buTest().assertTrue(buArrayUtils().equals(arr, expected), "subArry from last is bigger than count")
         end function
 
+        testFilter: function() as Void
+            expected = [1,3,5,7,9]
+            res = buArrayUtils().filter([1,2,3,4,5,6,7,8,9], function(i, el) as Boolean
+                return buNumbersUtils().isOdd(el)
+            end function)
+            buTest().assertTrue(buArrayUtils().equals(res, expected), "failed to filter odd numbers")
+        end function
+
         addSuite: function() as Void
             suite = {
                 name: "buArrayUtilsTests",
@@ -102,6 +110,7 @@ function buArrayUtilsTests() as Object
                     { name: "testAdd", test: m.testAdd },
                     { name: "testReplace", test: m.testReplace },
                     { name: "testSubarray", test: m.testSubarray },
+                    { name: "testFilter", test: m.testFilter },
                 ]
             }
 

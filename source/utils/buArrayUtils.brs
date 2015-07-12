@@ -12,6 +12,7 @@
 ' * replace
 ' * subArray
 ' * toString
+' * filter
 function buArrayUtils() as Object
     if(m.buArrayUtils = Invalid) then
         m.buArrayUtils = {
@@ -200,6 +201,27 @@ function buArrayUtils() as Object
             ' @returns {String} arr converted to string
             toString: function(arr as Dynamic) as String
                 return buStringUtils().toString(arr)
+            end function,
+
+            ' Applies the given filter function to each element of an array.
+            ' @param {roArray} arr - the array with the elements to filter
+            ' @param {Function} func - the filter function to apply. It has to have
+            ' the following signature: function(i, el) as Boolean
+            ' @returns {roArray} containing the elements filtered
+            filter: function(arr as Object, func as Function) as Dynamic
+                if not buTypeUtils().isArray(arr) then
+                    return Invalid
+                end if
+
+                result = []
+                for i = 0 to arr.count() - 1 step +1
+                    el = arr[i]
+
+                    if func(i, el) then
+                        result.push(el)
+                    end if
+                end for
+                return result
             end function
 
         }

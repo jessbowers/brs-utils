@@ -80,6 +80,7 @@ This includes:
 * replace
 * subArray
 * toString
+* filter
 
 ## buDeviceUtils
 
