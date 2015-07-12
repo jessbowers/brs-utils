@@ -172,6 +172,26 @@ function buStringUtilsTests() as Object
             buTest().assertTrue(buStringUtils().isNumeric("4417123456789113"))
         end function,
 
+        testWrap: function() as Void
+            text = "Here is one line of text that is going to be wrapped after 20 columns."
+            expected = "Here is one line of text" + buStringUtils().NEW_LINE + "that is going to be wrapped" + buStringUtils().NEW_LINE + "after 20 columns."
+            buTest().assertEquals(buStringUtils().wrap(text, 20), expected)
+
+            text = "Lorem Ipsum sonet damir A"
+            expected = "Lorem" + buStringUtils().NEW_LINE + "Ipsum" + buStringUtils().NEW_LINE + "sonet" + buStringUtils().NEW_LINE + "damir" + buStringUtils().NEW_LINE + "A"
+            buTest().assertEquals(buStringUtils().wrap(text, 0), expected)
+            buTest().assertEquals(buStringUtils().wrap(text, 1), expected)
+
+            buTest().assertEquals(buStringUtils().wrap("Lorem Ipsum", 20), "Lorem Ipsum")
+            buTest().assertEquals(buStringUtils().wrap("", 20), "")
+        end function,
+
+        testInitials: function() as Void
+            buTest().assertEquals(buStringUtils().initials("Lorem"), "L")
+            buTest().assertEquals(buStringUtils().initials("Lorem Ipsum sonet"), "LIs")
+            buTest().assertEquals(buStringUtils().initials(""), "")
+        end function
+
         addSuite: function() as Void
             suite = {
                 name: "buStringUtilsTests",
@@ -195,8 +215,10 @@ function buStringUtilsTests() as Object
                     { name: "testToMD5Hash", test: m.testToSHA1Hash },
                     { name: "testToMD5Hash", test: m.testToSHA256Hash },
                     { name: "testToMD5Hash", test: m.testToSHA512Hash },
-                    { name: "testSubstitute", test: m.testSubstitute }
-                    { name: "testIsNumeric", test: m.testIsNumeric }
+                    { name: "testSubstitute", test: m.testSubstitute },
+                    { name: "testIsNumeric", test: m.testIsNumeric },
+                    { name: "testWrap", test: m.testWrap },
+                    { name: "testInitials", test: m.testInitials },
                 ]
             }
 

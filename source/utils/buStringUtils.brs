@@ -30,9 +30,18 @@
 ' * substitute
 ' * toString
 ' * isNumeric
+' * wrap
+' * initials
 function buStringUtils() as Object
     if(m.buStringUtils = Invalid) then
         m.buStringUtils = {
+
+            NEW_LINE:       chr(10),
+            SINGLE_QUOTE:   chr(39),
+            DOUBLE_QUOTE:   chr(34),
+            TAB:            chr(9),
+            SPACE:          chr(32),
+
             '
             ' Checks if a string is empty:
             ' @param {String} text - The string to check
@@ -160,8 +169,11 @@ function buStringUtils() as Object
                 return text
             end function,
 
-            ' Converts a string to a roList
-            split: function(text as String, delim as String) as Object
+            ' Converts a string to a roArray
+            ' @param {String} text - text to split
+            ' @param {String} [delim = space] - delimeter to use to split
+            ' @returns {roArray} an array from the string
+            split: function(text as String, delim = m.SPACE as String) as Object
                 regex = createObject("roRegex", delim, "")
                 return regex.split(text)
             end function,
@@ -321,11 +333,57 @@ function buStringUtils() as Object
                 return type(any)
             end function,
 
+            ' Check if a string has only numeric characters
+            ' @param {String} text - text to check
+            ' @returns {Boolean} true if the string contains only numeric characters
             isNumeric: function(text as String) as Boolean
                 if m.isEmpty(text) then return false
 
                 roRegex = createObject("roRegex", "^[0-9]*$", "")
                 return roRegex.isMatch(text)
+            end function,
+
+            ' Wraps a single line of text, identifying words by ' '.
+            ' Very long words, such as URLs will not be wrapped.
+            ' @param {String} text - text to convert
+            ' @returns {String} long text separated by the EOL character
+            wrap: function(text as String, wrapLength as Integer) as String
+                if wrapLength < 1 then
+                    wrapLength = 1
+                end if
+
+                if m.isEmpty(text) or len(text) <= wrapLength then
+                    return text
+                end if
+
+                words = m.split(text)
+
+                result = ""
+                offset = wrapLength
+                for each word in words
+                    cwl = len(word)
+
+                    if len(word) < offset then
+                        result = result + word + m.SPACE
+                        offset = offset - len(word) - 1
+                    else
+                        result = result + word + m.NEW_LINE
+                        offset = wrapLength
+                    end if
+                end for
+                return result.trim()
+            end function,
+
+            ' Extracts the initial letters from each word in the String.
+            ' @param {String} str - the String to get initials from
+            ' @returns {String} of initial letters
+            initials: function(text as String) as String
+                words = m.split(text)
+                result = ""
+                for each word in words
+                    result = result + word.left(1)
+                end for
+                return result
             end function
         }
     endif

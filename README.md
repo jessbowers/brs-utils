@@ -51,6 +51,8 @@ This includes:
 * substitute
 * toString
 * isNumeric
+* wrap
+* initials
 
 ## buNumbersUtils
 
