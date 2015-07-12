@@ -21,5 +21,6 @@ sub runTests()
     buCacheTests()
     buDateTimeUtilsTests()
     buValidationUtilsTests()
+    buListTests()
     buTest().runAllTests()
 end sub

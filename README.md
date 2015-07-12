@@ -161,6 +161,28 @@ A very simplistic Set implementation. Only works with BrightScript primitives
 * filter
 * each
 
+## buList
+A roArray implementation with more functionality. Basically is a wrapper around
+a normal roArray and buArrayUtils. For example, instead of doing:
+
+```
+arr = [1,2,3,4]
+buArrayUtils().toString(arr)
+```
+
+You would do:
+
+```
+arr = buList([1,2,3,4])
+arr.toString()
+```
+
+Or more cool stuff
+
+```
+buList([1,2,3,4]).add(6).add(7).filter(...).each(...).toString()
+```
+
 ## buCache
 A Cache singleton for String data (i.e. JSON or XML data) in the Roku `tmp:` storage
 
