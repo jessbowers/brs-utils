@@ -26,6 +26,45 @@ function buSetTests() as Object
             buTest().assertEquals(s.count(), 2)
         end function,
 
+        testEquals: function() as Void
+            buTest().assertTrue(buSet([1,2,3]).equals(buSet([1,2,3])))
+            buTest().assertTrue(buSet([1,2,3]).equals(buSet([1,2,3,3])))
+            buTest().assertTrue(buSet(["1","2","3"]).equals(buSet(["1","2","3"])))
+            buTest().assertTrue(buSet().equals(buSet()))
+            buTest().assertFalse(buSet([1,2,3]).equals(buSet([1,2,3,4])))
+        end function,
+
+        testFilter: function() as Void
+            expected = buSet([1,3,5,7,9])
+            s = buSet([1,2,3,4,5,6,7,8,9,9])
+            res = s.filter(function(i, el) as Boolean
+                return buNumbersUtils().isOdd(el)
+            end function)
+            buTest().assertTrue(res.equals(expected), "failed to filter set by odd numbers")
+        end function
+
+        testEach: function() as Void
+            expected = buSet([1,3,5,7,9,11,13,15,17])
+            s = buSet([1,2,3,4,5,6,7,8,9,9])
+            res = s.each(function(i, el) as Dynamic
+                return i + el
+            end function)
+            buTest().assertTrue(res.equals(expected), "failed to apply to each element")
+        end function
+
+        testFilterEach: function() as Void
+            expected = buSet([1,4,7,10,13])
+
+            s = buSet([1,2,3,4,5,6,7,8,9,9])
+            res = s.filter(function(i, el) as Boolean
+                return buNumbersUtils().isOdd(el)
+            end function).each(function(i, el) as Dynamic
+                return i + el
+            end function)
+
+            buTest().assertTrue(res.equals(expected))
+        end function
+
         addSuite: function() as Void
             suite = {
                 name: "buSetTests",
@@ -34,6 +73,10 @@ function buSetTests() as Object
                     { name: "testContains", test: m.testContains },
                     { name: "testAdd", test: m.testAdd },
                     { name: "testRemove", test: m.testRemove },
+                    { name: "testEquals", test: m.testEquals },
+                    { name: "testFilter", test: m.testFilter },
+                    { name: "testEach", test: m.testEach },
+                    { name: "testFilterEach", test: m.testFilterEach },
                 ]
             }
 

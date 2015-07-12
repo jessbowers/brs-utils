@@ -151,6 +151,16 @@ To raise errors:
 ## buSet
 A very simplistic Set implementation. Only works with BrightScript primitives
 
+* add
+* remove
+* get
+* contains
+* count
+* equals
+* toString
+* filter
+* each
+
 ## buCache
 A Cache singleton for String data (i.e. JSON or XML data) in the Roku `tmp:` storage
 
