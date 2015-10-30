@@ -137,10 +137,10 @@ function buDateTimeUtilsTests() as Object
             buTest().assertEquals(buDateTimeUtils().toString(d1), "2014-10-29T10:30:00Z")
 
             formatter = buGenericDateTimeFormatter("-", "T")
-            buTest().assertEquals(buDateTimeUtils().toString(d1, formatter), "2014-10-10T10:30:00")
+            buTest().assertEquals(buDateTimeUtils().toString(d1, formatter), "2014-10-29T10:30:00")
 
             formatter = buGenericDateTimeFormatter()
-            buTest().assertEquals(buDateTimeUtils().toString(d1, formatter), "2014/10/10 10:30:00")
+            buTest().assertEquals(buDateTimeUtils().toString(d1, formatter), "2014/10/29 10:30:00")
         end function,
 
         addSuite: function() as Void

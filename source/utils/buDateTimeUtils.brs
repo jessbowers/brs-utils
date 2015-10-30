@@ -242,7 +242,7 @@ function buGenericDateTimeFormatter(ds = "/" as String, dts = " " as String) as 
         toString: function(date as Object) as String
             dstr = "{0}" + m.dateSeparator + "{1}" + m.dateSeparator + "{2}"
             k = buStringUtils().intToString(date.getMonth(), true)
-            d = buStringUtils().intToString(date.getMonth(), true)
+            d = buStringUtils().intToString(date.getDayOfMonth(), true)
             dstr = buStringUtils().substitute(dstr, date.getYear(), k, d)
 
             h = buStringUtils().intToString(date.getHours(), true)
